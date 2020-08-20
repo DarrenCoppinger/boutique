@@ -1,0 +1,10 @@
+mycmd.txt
+
+env.py
+*.py[cod]
+__pycache__/
+*.sqlite3
+
+static/
+htmlcov/
+.coverage
