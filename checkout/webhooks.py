@@ -7,7 +7,6 @@ from checkout.webhook_handler import StripeWH_Handler
 
 import stripe
 
-
 @require_POST
 @csrf_exempt
 def webhook(request):
@@ -32,7 +31,6 @@ def webhook(request):
         # Invalid signature
         return HttpResponse(status=400)
     except Exception as e:
-        # Generic exception handler to chance those other than the ones Strip has provided
         return HttpResponse(content=e, status=400)
 
     # Set up a webhook handler
