@@ -46,6 +46,9 @@ card.addEventListener('change', function (event) {
 // Handle form submit
 var form = document.getElementById('payment-form');
 
+// When the user clicks the submit button the event listener prevents the form from submitting
+// and instead disables the card element and triggers the loading overlay.
+
 form.addEventListener('submit', function(ev) {
     ev.preventDefault();
     card.update({ 'disabled': true});
@@ -53,6 +56,8 @@ form.addEventListener('submit', function(ev) {
     $('#payment-form').fadeToggle(100);
     $('#loading-overlay').fadeToggle(100);
 
+    // Then we create a few variables to capture the form data we can't put in
+    // the payment intent here, and instead post it to the cache_checkout_data view
     var saveInfo = Boolean($('#id-save-info').attr('checked'));
     // From using {% csrf_token %} in the form
     var csrfToken = $('input[name="csrfmiddlewaretoken"]').val();
@@ -63,7 +68,11 @@ form.addEventListener('submit', function(ev) {
     };
     var url = '/checkout/cache_checkout_data/';
 
+    // The view updates the payment intent and returns a 200 response (i.e. ".done(function() { ...."), at which point we
+    // call the confirm card payment method from stripe and if everything is ok
+    // submit the form.
     $.post(url, postData).done(function () {
+        // call confirmCardPayment form stripe
         stripe.confirmCardPayment(clientSecret, {
             payment_method: {
                 card: card,
@@ -94,6 +103,8 @@ form.addEventListener('submit', function(ev) {
             },
         }).then(function(result) {
             if (result.error) {
+                // If there's an error in the form then the loading overlay will
+                // be hidden the card element re-enabled and the error displayed for the user.
                 var errorDiv = document.getElementById('card-errors');
                 var html = `
                     <span class="icon" role="alert">
