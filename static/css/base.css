@@ -325,7 +325,7 @@ And then making it invisible so it appears you're clicking the button. */
     .btn.btn-outline-black.rounded-0.btn-lg,
     .btn.btn-black.rounded-0.btn-lg {
         padding: .375rem .375rem;
-        font-size: .75rem;
+        font-size: .7rem;
     }
 
     .increment-qty, .decrement-qty {
